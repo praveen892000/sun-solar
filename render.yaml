@@ -12,7 +12,8 @@ services:
     region: singapore
     branch: master
     autoDeployTrigger: commit
-    buildCommand: npm ci && npx prisma generate && npm run build
+    # Include devDependencies so TypeScript types / ESLint packages are available if needed.
+    buildCommand: npm ci --include=dev && npx prisma generate && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /api/health
     envVars:
