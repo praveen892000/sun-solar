@@ -1,0 +1,19 @@
+# Local Postgres for development (matches production provider).
+# Usage: docker compose up -d
+# Then set DATABASE_URL in .env to the URL below.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sunsolar
+      POSTGRES_PASSWORD: sunsolar
+      POSTGRES_DB: sunsolar
+    volumes:
+      - sun_solar_pg:/var/lib/postgresql/data
+
+volumes:
+  sun_solar_pg:
