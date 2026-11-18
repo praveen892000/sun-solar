@@ -49,6 +49,34 @@ export const GALLERY: GalleryItem[] = galleryMeta.map((meta, index) => ({
 /** Image used behind the home hero. */
 export const HERO_IMAGE = GALLERY[0].src;
 
+/** Home hero slider slides (structure + motion, logo-colour UI). */
+export const HERO_SLIDES = [
+  {
+    id: "rooftop",
+    image: GALLERY[0].src,
+    eyebrow: "Residential rooftop",
+    title: "Your roof. Your power plant.",
+    body: "On-grid solar for Chennai homes with PM Surya Ghar subsidy support and end-to-end TANGEDCO paperwork.",
+    cta: { label: "Check my subsidy", href: "/subsidy" },
+  },
+  {
+    id: "epc",
+    image: GALLERY[3].src,
+    eyebrow: "EPC & commercial",
+    title: "Survey. Design. Commission.",
+    body: "One team for rooftop and ground-mounted plants — from feasibility to monitoring handover.",
+    cta: { label: "Explore EPC", href: "/epc" },
+  },
+  {
+    id: "projects",
+    image: GALLERY[8].src,
+    eyebrow: "500+ installations",
+    title: "Real sites. Real generation.",
+    body: "From Mandaveli villas to 12 kWp homes — see how Chennai roofs are cutting bills with Sri Sun Solar.",
+    cta: { label: "View projects", href: "/projects" },
+  },
+] as const;
+
 export const BENEFITS = [
   {
     icon: "IndianRupee",
