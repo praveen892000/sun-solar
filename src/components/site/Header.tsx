@@ -4,13 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
+import {
+  BatteryCharging,
+  ChevronDown,
+  Droplets,
+  Fan,
+  Layers,
+  Menu,
+  PlugZap,
+  SunMedium,
+  Waves,
+  X,
+  type LucideIcon,
+} from "lucide-react";
+import {
+  ProductsMegaMenu,
+  type ProductMenuCategory,
+} from "@/components/site/ProductsMegaMenu";
 
-export type ProductMenuCategory = {
-  name: string;
-  slug: string;
-  items: { name: string; slug: string }[];
-};
+export type { ProductMenuCategory };
 
 type HeaderProps = {
   logoUrl: string;
@@ -28,6 +40,15 @@ const SIMPLE_AFTER = [
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  "solar-panels": SunMedium,
+  "solar-inverters": PlugZap,
+  batteries: BatteryCharging,
+  "solar-water-heaters": Droplets,
+  "solar-pumps": Waves,
+  "solar-appliances": Fan,
+};
 
 function closeMenus() {
   (document.activeElement as HTMLElement | null)?.blur();
@@ -104,39 +125,30 @@ export function Header({ logoUrl, productMenu }: HeaderProps) {
           <Link href="/subsidy" className={linkClass("/subsidy")}>
             Subsidy
           </Link>
-          <Dropdown
-            label="Products"
-            href="/products"
-            triggerClass={linkClass("/products")}
-            align="center"
-          >
-            <div className="grid w-[34rem] grid-cols-2 gap-x-6 gap-y-4 p-1">
-              {productMenu.map((cat) => (
-                <div key={cat.slug}>
-                  <Link
-                    href={`/products#${cat.slug}`}
-                    onClick={closeMenus}
-                    className="block px-2 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-solar-deep"
-                  >
-                    {cat.name}
-                  </Link>
-                  <ul>
-                    {cat.items.map((item) => (
-                      <li key={item.slug}>
-                        <Link
-                          href={`/products/${item.slug}`}
-                          onClick={closeMenus}
-                          className="block rounded-lg px-2 py-1.5 text-sm text-navy hover:bg-sand hover:text-azure"
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+
+          <div className="group relative">
+            <Link
+              href="/products"
+              className={linkClass("/products")}
+              aria-haspopup="true"
+            >
+              Products
+              <ChevronDown
+                size={16}
+                aria-hidden="true"
+                className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180"
+              />
+            </Link>
+            <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 opacity-0 transition duration-200 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+              <div className="mega-menu-enter origin-top">
+                <ProductsMegaMenu
+                  categories={productMenu}
+                  onNavigate={closeMenus}
+                />
+              </div>
             </div>
-          </Dropdown>
+          </div>
+
           {SIMPLE_AFTER.map((item) => (
             <Link key={item.href} href={item.href} className={linkClass(item.href)}>
               {item.label}
@@ -177,23 +189,40 @@ export function Header({ logoUrl, productMenu }: HeaderProps) {
               ))}
             </MobileGroup>
             <MobileLink href="/subsidy">Subsidy</MobileLink>
-            <MobileGroup title="Products" href="/products">
-              {productMenu.map((cat) => (
-                <div key={cat.slug} className="py-1">
-                  <Link
-                    href={`/products#${cat.slug}`}
-                    className="block px-3 pt-2 text-xs font-semibold uppercase tracking-[0.12em] text-solar-deep"
-                  >
-                    {cat.name}
-                  </Link>
-                  {cat.items.map((item) => (
-                    <MobileSub key={item.slug} href={`/products/${item.slug}`}>
-                      {item.name}
-                    </MobileSub>
-                  ))}
-                </div>
-              ))}
-            </MobileGroup>
+
+            <div className="border-b border-line pb-3">
+              <Link
+                href="/products"
+                className="block px-3 py-3 text-base font-medium text-navy"
+              >
+                Products
+              </Link>
+              <div className="space-y-2 px-2">
+                {productMenu.map((cat) => {
+                  const Icon = CATEGORY_ICONS[cat.slug] ?? Layers;
+                  return (
+                    <details key={cat.slug} className="rounded-xl bg-sand/60 open:bg-sand">
+                      <summary className="flex cursor-pointer list-none items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-navy">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white text-azure">
+                          <Icon className="size-4" />
+                        </span>
+                        {cat.name}
+                      </summary>
+                      <ul className="pb-2 pl-3">
+                        {cat.items.map((item) => (
+                          <li key={item.slug}>
+                            <MobileSub href={`/products/${item.slug}`}>
+                              {item.name}
+                            </MobileSub>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  );
+                })}
+              </div>
+            </div>
+
             {SIMPLE_AFTER.map((item) => (
               <MobileLink key={item.href} href={item.href}>
                 {item.label}
@@ -213,13 +242,11 @@ function Dropdown({
   label,
   href,
   triggerClass,
-  align = "left",
   children,
 }: {
   label: string;
   href: string;
   triggerClass: string;
-  align?: "left" | "center";
   children: ReactNode;
 }) {
   return (
@@ -232,11 +259,7 @@ function Dropdown({
           className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180"
         />
       </Link>
-      <div
-        className={`invisible absolute top-full z-50 pt-2 opacity-0 transition duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100 ${
-          align === "center" ? "left-1/2 -translate-x-1/2" : "left-0"
-        }`}
-      >
+      <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
         <div className="rounded-2xl border border-line bg-white p-2 shadow-xl">
           {children}
         </div>
