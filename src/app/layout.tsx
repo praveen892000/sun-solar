@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Source_Serif_4 } from "next/font/google";
+import { Plus_Jakarta_Sans, Syne } from "next/font/google";
 import { getSiteUrl } from "@/lib/seo";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B1F3A",
+  themeColor: "#101820",
   width: "device-width",
   initialScale: 1,
 };
@@ -67,9 +67,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-IN"
-      className={`${outfit.variable} ${sourceSerif.variable} h-full antialiased`}
+      className={`${jakarta.variable} ${syne.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

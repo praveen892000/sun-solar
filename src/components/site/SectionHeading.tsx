@@ -3,10 +3,8 @@ type SectionHeadingProps = {
   eyebrow?: string;
   description?: string;
   align?: "left" | "center";
-  /** Use on dark (navy) backgrounds. */
   light?: boolean;
   as?: "h1" | "h2";
-  /** Id placed on the heading, for aria-labelledby. */
   id?: string;
   className?: string;
 };
@@ -26,10 +24,12 @@ export function SectionHeading({
     <div
       className={`${centered ? "mx-auto text-center" : ""} max-w-2xl ${className}`}
     >
-      {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
+      {eyebrow ? (
+        <p className={`eyebrow mb-4 ${light ? "!text-sun" : ""}`}>{eyebrow}</p>
+      ) : null}
       <Tag
         id={id}
-        className={`font-display text-3xl font-semibold sm:text-4xl ${
+        className={`font-display text-[clamp(1.85rem,3.5vw,2.85rem)] font-extrabold tracking-tight ${
           light ? "!text-white" : ""
         }`}
       >
@@ -38,7 +38,7 @@ export function SectionHeading({
       {description ? (
         <p
           className={`mt-4 text-lg leading-relaxed ${
-            light ? "text-white/80" : "text-muted"
+            light ? "text-white/75" : "text-muted"
           }`}
         >
           {description}
